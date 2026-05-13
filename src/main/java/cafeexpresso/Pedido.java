@@ -29,6 +29,23 @@ public class Pedido {
         return total;
     }
 
+    public void pagar() {
+        if (status != StatusPedido.PENDENTE) {
+            throw new IllegalStateException("So e possivel pagar um pedido pendente.");
+        }
+        if (itens.isEmpty()) {
+            throw new IllegalStateException("Nao e possivel pagar um pedido sem itens.");
+        }
+        this.status = StatusPedido.PAGO;
+    }
+
+    public void enviarParaCozinha() {
+        if (status != StatusPedido.PAGO) {
+            throw new IllegalStateException("So e possivel enviar para a cozinha um pedido pago.");
+        }
+        this.status = StatusPedido.EM_PREPARO;
+    }
+
     public StatusPedido getStatus() {
         return status;
     }
