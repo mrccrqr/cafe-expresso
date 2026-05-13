@@ -46,6 +46,13 @@ public class Pedido {
         this.status = StatusPedido.EM_PREPARO;
     }
 
+    public void finalizarPedido() {
+        if (status != StatusPedido.EM_PREPARO) {
+            throw new IllegalStateException("So e possivel finalizar um pedido em preparo.");
+        }
+        this.status = StatusPedido.FINALIZADO;
+    }
+
     public StatusPedido getStatus() {
         return status;
     }
