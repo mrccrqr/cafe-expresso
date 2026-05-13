@@ -26,4 +26,58 @@ public class PedidoTest {
         pedido.adicionarItem(new Produto("Cappuccino", 8.0), 1);
         assertEquals(18.0, pedido.calcularTotal());
     }
+
+    @Test
+    void devePagarPedidoComSucesso() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        pedido.pagar();
+        assertEquals(StatusPedido.PAGO, pedido.getStatus());
+    }
+
+    @Test
+    void naoDevePagarPedidoSemItens() {
+        Pedido pedido = new Pedido();
+        assertThrows(IllegalStateException.class, () -> {
+            pedido.pagar();
+        });
+    }
+
+    @Test
+    void naoDevePagarPedidoJaPago() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        pedido.pagar();
+        assertThrows(IllegalStateException.class, () -> {
+            pedido.pagar();
+        });
+    }
+
+    @Test
+    void deveEnviarParaCozinhaComSucesso() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        pedido.pagar();
+        pedido.enviarParaCozinha();
+        assertEquals(StatusPedido.EM_PREPARO, pedido.getStatus());
+    }
+
+    @Test
+    void naoDeveEnviarParaCozinhaSemPagar() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        assertThrows(IllegalStateException.class, () -> {
+            pedido.enviarParaCozinha();
+        });
+    }
+
+    @Test
+    void naoDeveAdicionarItemEmPedidoNaoPendente() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        pedido.pagar();
+        assertThrows(IllegalStateException.class, () -> {
+            pedido.adicionarItem(new Produto("Cappuccino", 8.0), 1);
+        });
+    }
 }
