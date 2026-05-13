@@ -80,4 +80,24 @@ public class PedidoTest {
             pedido.adicionarItem(new Produto("Cappuccino", 8.0), 1);
         });
     }
+
+    @Test
+    void deveFinalizarPedidoComSucesso() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        pedido.pagar();
+        pedido.enviarParaCozinha();
+        pedido.finalizarPedido();
+        assertEquals(StatusPedido.FINALIZADO, pedido.getStatus());
+    }
+
+    @Test
+    void naoDeveFinalizarPedidoSemEstarEmPreparo() {
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(new Produto("Espresso", 5.0), 1);
+        pedido.pagar();
+        assertThrows(IllegalStateException.class, () -> {
+            pedido.finalizarPedido();
+        });
+    }
 }
